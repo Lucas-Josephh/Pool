@@ -1,0 +1,87 @@
+commande de connexion SSH :
+     - ssh -T -p 2220 bandit[Numéro_Niveau]@bandit.labs.overthewire.org
+
+Niveau 0 :
+    - ssh -T -p 2220 bandit0@bandit.labs.overthewire.org
+    - mdp connexion : bandit0
+    - ls 
+    - cat readme
+    - mdp : ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If
+
+Niveau 1 :
+    - ssh -T -p 2220 bandit1@bandit.labs.overthewire.org
+    - mdp connexion : ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If
+    - ls 
+    - cat ./-
+    - mdp : 263JGJPfgU6LtdEvgfWU1XP5yac29mFx
+
+Niveau 2 :
+    - ssh -T -p 2220 bandit2@bandit.labs.overthewire.org
+    - mdp connexion : 263JGJPfgU6LtdEvgfWU1XP5yac29mFx
+    - ls
+    - cat ./'--spaces in this filename--'
+    - mdp : MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+
+Niveau 3 :
+    - ssh -T -p 2220 bandit3@bandit.labs.overthewire.org
+    - mdp connexion : MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+    - ls
+    - cd inhere
+    - ls -a
+    - cat ...Hiding-From-You
+    - mdp : 2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
+
+Niveau 4 :
+    - ssh -T -p 2220 bandit4@bandit.labs.overthewire.org
+    - mdp connexion : 2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
+    - ls
+    - cd inhere
+    - file ./'-file00' => data
+    - file ./'-file01' => data
+    - file ./'-file02' => data
+    ...
+    - file ./'-file07' => ASCII text
+    - cat ./'-file07'
+    - mdp : 4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw
+
+Niveau 5 :
+    - ssh -T -p 2220 bandit5@bandit.labs.overthewire.org
+    - mdp connexion : 4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw
+    - ls
+    - find inhere -size 1033c -exec cat {} \;
+    - mdp : HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
+
+Niveau 6 :
+    - ssh -T -p 2220 bandit6@bandit.labs.overthewire.org
+    - mdp connexion : HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
+    - ls
+    - find / -size 33c -user bandit7 -group bandit6
+    - mdp : morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
+
+Niveau 7 :
+    - ssh -T -p 2220 bandit7@bandit.labs.overthewire.org
+    - mdp connexion : morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
+    - ls
+    - grep 'millionth' data.text
+    - mdp : dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
+
+Niveau 8 :
+    - ssh -T -p 2220 bandit8@bandit.labs.overthewire.org
+    - mdp connexion : dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
+    - ls
+    - cat data.txt | sort | uniq -u
+    - mdp : 4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
+
+Niveau 9 :
+    - ssh -T -p 2220 bandit9@bandit.labs.overthewire.org
+    - mdp connexion : 4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
+    - ls
+    - strings data.txt
+    - mdp : FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
+
+Niveau 10 :
+    - ssh -T -p 2220 bandit10@bandit.labs.overthewire.org
+    - mdp connexion : FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
+    - ls
+    -
+    - mdp : VkdobElIQmhjM04zYjNKa0lHbHpJR1IwVWpFM00yWmFTMkl3VWxKelJFWlRSM05uTWxKWGJuQk9WbW96Y1ZKeUNnICAK
