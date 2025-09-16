@@ -18,17 +18,18 @@ def hanged():
             if len(proposition) == 1:
                 if (proposition in hide_word) and not (proposition in say_word):
                     find_words.append(proposition)
-                    print("\nBravo ! vous avez trouvé une lettre :)")
                     say_word.append(proposition)
+                    print("\nBravo ! vous avez trouvé une lettre :)")
                 elif proposition in say_word:
                     print("\nVous avez déjà dis cette lettre :x")
                 else:
-                    print("\nNon ! cette lettre n'est pas dans le mot :\\")
                     penality += 1
                     say_word.append(proposition)
+                    print("\nNon ! cette lettre n'est pas dans le mot :\\")
             else:
                 if proposition != hide_word:
                     penality += 5
+                    print("\nLe mot proposé n'est pas le bon !")
 
         else:
             print("\nVeuillez mettre que des lettres dans votre proposition")

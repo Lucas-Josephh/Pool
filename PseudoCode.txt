@@ -1,0 +1,113 @@
+Fonction hanged() :
+    // Initialiser une liste de mots trouvés
+    find_words <-- []
+
+    // Initialiser une liste de mots déjà dit
+    say_words <-- []
+
+    // Initialiser une variable contenant le mot caché
+    hide_word <-- "Random word"
+
+    // Initialiser la variable de pénalités
+    penality <-- 0
+
+    // Initialiser une variable de proposition de mot ou de lettre pour le joueur
+    proposition <-- ''
+
+    // Initialiser une varialble qu'on mettra à True quand le joueur aura trouvé tout les mots
+    find_all_words <-- False
+    
+    Boucle while (Si penality >= 12) ET (Si proposition == hide_word) ET (Si find_all_words) :
+        Afficher (Proposer une lettre ou un mot)
+        
+        // Entrée clavier propositon 
+        proposition <-- entrée clavier on met tout en majuscule
+
+        // Mettre une fonction qui va vérifier si chaque caractère de la proposition sont des lettres
+        Si control_proposition == True
+
+            // Vérifier si la longueur de la proposition est 1 pour vérifier si il propose une lettre ou un mot
+            Si longueur de proposition == 1 :
+                
+                // Vérifier si la lettre est dans le mot caché et qu'il n'a pas encore été dit
+                Si (proposition est dans hide_word) ET (proposition est dans say_words) :
+
+                    // Ajouter proposition dans la liste de mots dit
+                    say_words <-- proposition
+
+                    // Ajouter proposition dans la liste de mots trouvés
+                    find_all_words <-- proposition
+
+                    Afficher (Bravo ! vous avez trouvé une lettre)
+                Sinon Si proposition est dans say_words :
+                    Afficher (Vous avez déj proposé cette lettre)
+                Sinon :
+                    // Ajouter proposition dans la liste de mots dit
+                    say_words <-- proposition
+
+                    // Ajouter 1 à la pénalité
+                    penality <-- +1
+                    
+                    Afficher (Cette lettre n'est pas dans le mot)
+                end if
+            Sinon :
+                // Si la proposition n'est pas égale au mot caché
+                Si (proposition != hide_word) :
+
+                    // Ajouter 5 à la pénalité
+                    penality <-- +5
+                    
+                    Afficher (Le mot proposé n'est pas bon !)
+                end if
+            end if
+        Sinon :
+            Afficher (Veuillez proposer uniquement des lettres)
+        end if
+
+        // Faire une fonction qui affiche le jeu et qui vérifi si tout les mots ont été trouvés
+        Si show_game(hide_word, find_all_words, say_words, penality) :
+            
+            // Mettre find_all_words à True
+            find_all_words <-- True
+        end if
+    end while
+
+    // On sort de la boucle une fois que l'une des conditions est False
+    // On vérifi si la condition qui nous a fais sortir est celle des pénalités
+    Si penality < 12 :
+        Afficher (Vous avez trouvé le mot !)
+    Sinon :
+        Afficher (Vous avez perdu !)
+    end if
+
+
+Fonction control_proposition(proposition):
+    Boucle pour tout caractère dans proposition:
+        Si ASCII(characters) >= 65 ET ASCII(characters) <= 90 :
+            retourne Faux
+        end if
+    end for
+    retourne Vrai
+
+Fonction show_game(hide_word, find_words, say_word, penality):
+
+    // Initialiser une variable local pour vérifier que tout les mots ont été trouvés
+    find_all_words = True
+
+    Boucle pour tout caractère dans hide_word :
+        Si show_word est dans find_words:
+            Afficher (show_word)
+        Sinon :
+            Afficher (_)
+
+            // Mettre la varaibe local à Faux pour dire qu'au moins une lettre n'a pas encore été trouvé
+            find_all_words = False
+    
+    // Afficher le jeu
+    Afficher (say_word)
+    Afficher(Tentatives {12 - penality})
+
+    // Retourner l'état de ma variable local
+    retourne find_all_words
+ 
+
