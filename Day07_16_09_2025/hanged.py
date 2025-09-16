@@ -30,7 +30,6 @@ def hanged():
                 if proposition != hide_word:
                     penality += 5
                     print("\nLe mot proposé n'est pas le bon !")
-
         else:
             print("\nVeuillez mettre que des lettres dans votre proposition")
 
