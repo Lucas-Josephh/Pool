@@ -1,4 +1,4 @@
-HANGED_SUCCES = "Bravo ! vous avez trouvé une lettre :)"
+HANGED_SUCCESS = "Bravo ! vous avez trouvé une lettre :)"
 HANGED_WRONG = "Le mot proposé n'est pas le bon !"
 HANGED_NOT_FOUND_SENTENCE = "Non ! cette lettre n'est pas dans le mot :\\"
 HANGED_NOT_LETTER = "Veuillez mettre que des lettres dans votre proposition"

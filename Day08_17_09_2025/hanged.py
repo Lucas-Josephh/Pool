@@ -2,17 +2,23 @@ import pygame
 import pygame_textinput
 import hanged_c
 import hanged_const
-
-# Ce programme est pour l'instant non fonctionnel. Je dois tout refaire avec des class pour pouvoir mieux utiliser
-# le graphique
+import words
 
 
 def hanged_game():
-    hang = hanged_c.Hanged([], [], "", 0)
+    hang = hanged_c.Hanged([], [], "", "", 0)
     hang_const = hanged_const
+    hang.set_hide_word(
+        words.words().replace("é", "e").replace("à", "a").replace("è", "e").upper()
+    )
+    hang.set_rm_found_words(hang.get_hide_word())
     proposition = ""
 
-    while (hang.get_penality() <= 12) and (hang.get_hide_word != proposition):
+    while (
+        (hang.get_penality() <= 12)
+        and (len(hang.get_rm_found_words()) != 0)
+        and (hang.get_hide_word() != proposition)
+    ):
         show_game(
             hang.get_hide_word(),
             hang.get_words_found(),
@@ -23,11 +29,12 @@ def hanged_game():
         proposition = input().upper()
         if hang.isLetter(proposition):
             if hang.isWord(proposition):
-                if proposition in hang.get_words_say():
+                if not (proposition in hang.get_words_say()):
                     if proposition in hang.get_hide_word():
                         hang.set_words_say(proposition)
                         hang.set_words_found(proposition)
-                        print(hang_const.SUCCES)
+                        hang.rm_found_words(proposition)
+                        print(hang_const.HANGED_SUCCESS)
                     else:
                         hang.set_words_say(proposition)
                         hang.set_penality(1)
@@ -41,7 +48,7 @@ def hanged_game():
         else:
             print(hang_const.HANGED_NOT_LETTER)
 
-    if hang.get_penality < 12:
+    if hang.get_penality() < 12:
         print(hang_const.HANGED_WIN)
         print(f"Tentatives : {len(hang.get_words_found()) + len(hang.get_words_say())}")
         exit()
@@ -55,17 +62,15 @@ def show_game(hide_word, find_words, say_word, penality):
             print(show_word, end=" "),
         else:
             print("_", end=" ")
-    print(f"\nMots dit : {say_word}")
+    print(f"\nLettres dites : {say_word}")
     print(f"Tentatives restantes : {12 - penality}")
     print("==========================================")
 
 
 def show_screen(hide_word):
     pygame.init()
-
     WIDTH = 1200
     HEIGH = 800
-
     screen = pygame.display.set_mode((WIDTH, HEIGH))
 
     # Initialisation des styles
