@@ -1,0 +1,7 @@
+HANGED_SUCCES = "Bravo ! vous avez trouvé une lettre :)"
+HANGED_WRONG = "Le mot proposé n'est pas le bon !"
+HANGED_NOT_FOUND_SENTENCE = "Non ! cette lettre n'est pas dans le mot :\\"
+HANGED_NOT_LETTER = "Veuillez mettre que des lettres dans votre proposition"
+HANGED_ALREADY_SAY = "Vous avez déjà dis cette lettre :x"
+HANGED_WIN = "Vous avez réussi à trouver le mot !"
+HANGED_LOOSE = "Vous avez perdu :( Vous n'echapperez pas à la pendaison !"
