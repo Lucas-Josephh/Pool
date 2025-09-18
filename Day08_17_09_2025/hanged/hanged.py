@@ -1,29 +1,40 @@
 import pygame
-import pygame_textinput
 import hanged_c
 import hanged_const
 import words
+import asyncio
+import stickman
 
 
-def hanged_game():
-    hang = hanged_c.Hanged([], [], "", "", 0)
+async def hanged_game(hang):
     hang_const = hanged_const
     hang.set_hide_word(
-        words.words().replace("é", "e").replace("à", "a").replace("è", "e").upper()
+        words.words()
+        .replace("é", "e")
+        .replace("à", "a")
+        .replace("è", "e")
+        .replace("ç", "c")
+        .replace("â", "a")
+        .upper()
     )
     hang.set_rm_found_words(hang.get_hide_word())
     proposition = ""
+
+    print("La fonction asyncrone fonctionne parfaitement !")
 
     while (
         (hang.get_penality() <= 12)
         and (len(hang.get_rm_found_words()) != 0)
         and (hang.get_hide_word() != proposition)
     ):
-        show_game(
-            hang.get_hide_word(),
-            hang.get_words_found(),
-            hang.get_words_say(),
-            hang.get_penality(),
+
+        await asyncio.gather(
+            show_game(
+                hang.get_hide_word(),
+                hang.get_words_found(),
+                hang.get_words_say(),
+                hang.get_penality(),
+            )
         )
         print("\nProposez une lettre ou un mot")
         proposition = input().upper()
@@ -67,10 +78,11 @@ def show_game(hide_word, find_words, say_word, penality):
     print("==========================================")
 
 
-def show_screen(hide_word):
+async def show_screen(hang):
+
     pygame.init()
-    WIDTH = 1200
-    HEIGH = 800
+    WIDTH = 1412
+    HEIGH = 560
     screen = pygame.display.set_mode((WIDTH, HEIGH))
 
     # Initialisation des styles
@@ -80,55 +92,28 @@ def show_screen(hide_word):
     font_renderer_strokes = pygame.font.Font(default_font, 30)
 
     labels = [
-        font_renderer_words.render(words, 1, (255, 255, 255)) for words in hide_word
+        font_renderer_words.render(words, 1, (255, 255, 255))
+        for words in hang.get_hide_word()
     ]
     words_not_found = [
         font_renderer_strokes.render("_", 1, (255, 255, 255))
-        for i in range(len(hide_word))
+        for i in range(len(hang.get_hide_word()))
     ]
 
-    # Dessin du pendu
-    # Tête
-    pygame.draw.circle(screen, (255, 255, 255), (300, 300), 50)
+    stick = stickman.Stickman(screen)
+    stick.rope()
+    stick.top_sidebar()
+    stick.vertical_bar()
+    stick.diagonal_bar()
+    stick.bottom_bar()
+    stick.head()
+    stick.body()
+    stick.left_harm()
+    stick.right_harm()
+    stick.left_leg()
+    stick.right_leg()
 
-    # Corps
-    pygame.draw.line(screen, (255, 255, 255), (300, 300), (300, 450), 5)
-
-    # Bras
-    pygame.draw.line(screen, (255, 255, 255), (300, 395), (380, 395), 5)
-    pygame.draw.line(screen, (255, 255, 255), (300, 395), (220, 395), 5)
-
-    # Jambes
-    pygame.draw.line(screen, (255, 255, 255), (300, 450), (250, 530), 5)
-    pygame.draw.line(screen, (255, 255, 255), (300, 450), (350, 530), 5)
-
-    # Structure en partant de la tête
-    pygame.draw.line(screen, (255, 255, 255), (300, 300), (300, 150), 5)
-
-    # Barre latérale haut
-    pygame.draw.line(screen, (255, 255, 255), (300, 150), (100, 150), 5)
-
-    # Barre diagonale
-    pygame.draw.line(screen, (255, 255, 255), (150, 150), (100, 200), 5)
-
-    # Barre horizontale
-    pygame.draw.line(screen, (255, 255, 255), (100, 150), (100, 650), 5)
-
-    # Barre latérale bat
-    pygame.draw.line(screen, (255, 255, 255), (100, 650), (0, 650), 5)
-    pygame.draw.line(screen, (255, 255, 255), (100, 650), (200, 650), 5)
-
-    # Initialisation de l'input box utilisation de la bibliothèque pygame_textinput créé par l'utilisateur "Nearoo"
-    # DOC : https://github.com/Nearoo/pygame-text-input
-
-    # Création de l'objet input
-    input_text = pygame_textinput.TextInputVisualizer()
-    input_text.font_color = (255, 255, 255)
     clock = pygame.time.Clock()
-
-    # Création du bouton d'envoie
-    pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(400, 650, 100, 30))
-    label_button = font_renderer_words.render("Envoyer", 1, (0, 0, 255))
 
     while True:
         space = 0
@@ -137,12 +122,7 @@ def show_screen(hide_word):
             screen.blit(words_not_found[i], (400 + space, 600))
             space += 30
 
-        screen.blit(label_button, (410, 655))
-        screen.blit(info_text, (400, 500))
         events = pygame.event.get()
-        input_text.update(events)
-        screen.blit(input_text.surface, (400, 700))
-
         for event in events:
             if event.type == pygame.QUIT:
                 exit()
@@ -150,11 +130,16 @@ def show_screen(hide_word):
                 if (400 + 100) >= event.dict["pos"][0] >= 400 and (
                     650 + 30
                 ) >= event.dict["pos"][1] >= 650:
-                    if active_button:
-                        val_input = input_text.value
-                        input_text.value = ""
+                    pass
         pygame.display.update()
         clock.tick(30)
 
 
-hanged_game()
+async def main():
+    hang = hanged_c.Hanged([], [], "", "", "ok", 0)
+
+    await asyncio.gather(hanged_game(hang), show_screen(hang))
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

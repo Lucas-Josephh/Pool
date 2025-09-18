@@ -4,17 +4,13 @@
 class Hanged:
 
     def __init__(
-        self,
-        words_say,
-        words_found,
-        hide_word,
-        del_found_words,
-        penality,
+        self, words_say, words_found, hide_word, del_found_words, message, penality
     ):
         self.words_say = words_say
         self.words_found = words_found
         self.hide_word = hide_word
         self.del_found_words = del_found_words
+        self.message = message
         self.penality = penality
 
     def set_words_say(self, word):
@@ -61,3 +57,9 @@ class Hanged:
 
     def isSentenceFound(self, sentence):
         return sentence == self.get_hide_word
+
+    def set_message(self, msg):
+        self.message = msg
+
+    def get_message(self):
+        return self.message
