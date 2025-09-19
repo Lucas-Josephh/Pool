@@ -29,24 +29,6 @@ class Stickman:
         self.top_sidebar_height = top_sidebar_height
         self.top_sidebar_width = top_sidebar_width
 
-    def head(self):
-        pygame.draw.circle(self.surface, (0, 0, 0), (300, 300), 50)
-
-    def body(self):
-        pygame.draw.line(self.surface, (0, 0, 0), (300, 300), (300, 450), 5)
-
-    def right_harm(self):
-        pygame.draw.line(self.surface, (0, 0, 0), (300, 395), (380, 395), 5)
-
-    def left_harm(self):
-        pygame.draw.line(self.surface, (0, 0, 0), (300, 395), (220, 395), 5)
-
-    def left_leg(self):
-        pygame.draw.line(self.surface, (0, 0, 0), (300, 450), (250, 530), 5)
-
-    def right_leg(self):
-        pygame.draw.line(self.surface, (0, 0, 0), (300, 450), (350, 530), 5)
-
     def bottom_bar(self):
         img = pygame.image.load("Day09_18_09_2025\\hanged\\src\\bottom_bar.png")
         img = pygame.transform.scale(img, (200, 35))

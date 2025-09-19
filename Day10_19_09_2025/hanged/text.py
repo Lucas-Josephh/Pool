@@ -1,31 +1,24 @@
+import time
+import pygame
+
+
 class Text:
-    def __init__(self, font, msg="", color=(255, 255, 255), pos=(0, 0)):
-        self.font = font
+    def __init__(self, surface, msg="", rects=None):
+        self.surface = surface
         self.msg = msg
-        self.color = color
+        self.rects = rects
+
+    def create(self):
+        self.rects = pygame.font.Font(None, 36).render(self.msg, True, (255, 255, 255))
+
+    def modifier(self, msg):
+        self.msg = msg
+        self.rects = pygame.font.Font(None, 36).render(self.msg, True, (255, 255, 255))
+
+    def display(self, surface, size, pos=(0, 0)):
+        self.surface = surface
         self.pos = pos
-        self.visible = False
-        self.surface = None
-        self.rect = None
-
-    def creer(self):
-        self.surface = self.font.render(self.msg, True, self.color)
-        self.rect = self.surface.get_rect(topleft=self.pos)
-        self.visible = True
-
-    def modifier(self, msg=None, color=None, pos=None):
-        if msg is not None:
-            self.msg = msg
-        if color is not None:
-            self.color = color
-        if pos is not None:
-            self.pos = pos
-        self.surface = self.font.render(self.msg, True, self.color)
-        self.rect = self.surface.get_rect(topleft=self.pos)
-
-    def supprimer(self):
-        self.visible = False
-
-    def draw(self, surface):
-        if self.visible and self.surface:
-            surface.blit(self.surface, self.rect)
+        pygame.draw.rect(self.surface, (255, 255, 255), (self.pos, (500, 50)), 100)
+        pygame.display.flip()
+        self.rect = pygame.font.Font(None, 36).render(self.msg, True, (0, 0, 0))
+        self.surface.blit(self.rect, self.pos)

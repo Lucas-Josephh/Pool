@@ -1,15 +1,13 @@
+import time
 import pygame
 import hanged_c
 import hanged_const
 import words
-import asyncio
 import stickman
 import text
 
 
-async def hanged_game(hang):
-    clock = pygame.time.Clock()
-    hang_const = hanged_const
+def init_game(hang):
     hang.set_hide_word(
         words.words()
         .replace("é", "e")
@@ -19,60 +17,46 @@ async def hanged_game(hang):
         .replace("â", "a")
         .upper()
     )
+
     hang.set_rm_found_words(hang.get_hide_word())
-    proposition = ""
 
-    print("La fonction asyncrone fonctionne parfaitement !")
 
-    while (
-        (hang.get_penality() <= 12)
-        and (len(hang.get_rm_found_words()) != 0)
-        and (hang.get_hide_word() != proposition)
-    ):
+def hanged_game(hang, proposition):
+    hang_const = hanged_const
+    proposition = proposition.upper()
 
-        print("\nProposez une lettre ou un mot")
-        if hang.isLetter(proposition):
-            if hang.isWord(proposition):
-                if not (proposition in hang.get_words_say()):
-                    if proposition in hang.get_hide_word():
-                        hang.set_words_say(proposition)
-                        hang.set_words_found(proposition)
-                        hang.rm_found_words(proposition)
-                        print(hang_const.HANGED_SUCCESS)
-                    else:
-                        hang.set_words_say(proposition)
-                        hang.set_penality(1)
-                        print(hang_const.HANGED_WRONG)
+    if hang.get_penality() >= 4:
+        return hang_const.HANGED_LOOSE
+    if len(hang.get_rm_found_words()) == 1:
+        return hang_const.HANGED_WIN
+
+    if hang.isLetter(proposition):
+        if hang.isWord(proposition):
+            if not (proposition in hang.get_words_say()):
+                if proposition in hang.get_hide_word():
+                    hang.set_words_say(proposition)
+                    hang.set_words_found(proposition)
+                    hang.rm_found_words(proposition)
+                    return hang_const.HANGED_SUCCESS
                 else:
-                    print(hang_const.HANGED_ALREADY_SAY)
+                    hang.set_words_say(proposition)
+                    hang.set_penality(1)
+                    return hang_const.HANGED_WRONG
             else:
-                if not hang.isSentenceFound(proposition):
-                    hang.set_penality(5)
-                    print(hang_const.HANGED_NOT_FOUND_SENTENCE)
+                return hang_const.HANGED_ALREADY_SAY
         else:
-            print(hang_const.HANGED_NOT_LETTER)
-
-    if hang.get_penality() < 12:
-        print(hang_const.HANGED_WIN)
-        print(f"Tentatives : {len(hang.get_words_found()) + len(hang.get_words_say())}")
-        exit()
-    print(hang_const.HANGED_LOOSE)
+            if not hang.isSentenceFound(proposition):
+                hang.set_penality(5)
+                return hang_const.HANGED_NOT_FOUND_SENTENCE
+    else:
+        return hang_const.HANGED_NOT_LETTER
 
 
-async def show_game(hide_word, find_words, say_word, penality):
-    print("==========================================")
-    for show_word in hide_word:
-        if show_word in find_words:
-            print(show_word, end=" "),
-        else:
-            print("_", end=" ")
-    print(f"\nLettres dites : {say_word}")
-    print(f"Tentatives restantes : {12 - penality}")
-    print("==========================================")
-
-
-async def show_screen(hang):
+def show_screen():
+    hang = hanged_c.Hanged()
     pygame.init()
+    init_game(hang)
+
     clock = pygame.time.Clock()
     WIDTH = 1127
     HEIGH = 562
@@ -85,18 +69,22 @@ async def show_screen(hang):
 
     stick = stickman.Stickman(screen, 0, 300)
     stick.pos(350, 500)
-    stick.bottom_bar()
-    stick.vertical_bar()
-    stick.top_sidebar()
-    stick.diagonal_bar()
-    stick.rope()
 
     font = pygame.font.SysFont("arial", 48)
 
-    hiding_word = text.Text(
-        font, "", (0, 255, 0), ((WIDTH // 2) - (WIDTH // 2) // 2, 0)
-    )
-    hiding_word.creer()
+    hiding_word = text.Text(screen, "")
+    hiding_word.create()
+
+    result = ""
+    for i in range(len(hang.get_hide_word())):
+        result += " _ "
+
+    hiding_word.modifier(result)
+    hiding_word.display(screen, len(result), ((WIDTH // 2) - (WIDTH // 2) // 2, 20))
+
+    info_message = text.Text(screen, "")
+    info_message.create()
+    info_message.display(screen, len(result), ((WIDTH // 2) - (WIDTH // 2) // 2, 90))
 
     while True:
         events = pygame.event.get()
@@ -104,26 +92,35 @@ async def show_screen(hang):
             if event.type == pygame.QUIT:
                 exit()
             if event.type == pygame.KEYDOWN:
-                hang.set_choose_key(chr(event.key).upper())
+                info = hanged_game(hang, chr(event.key))
 
-        hide_word = ""
-        for hide in hang.get_hide_word():
-            if hide in hang.get_words_found():
-                hide_word += hide
-            else:
-                hide_word += " _ "
-        hiding_word.modifier(hide_word)
+                info_message.modifier(info)
+                info_message.display(
+                    screen, len(info), ((WIDTH // 2) - (WIDTH // 2) // 2, 90)
+                )
 
-        hiding_word.draw(screen)
+                hide_word = ""
+                for hide in hang.get_hide_word():
+                    if hide in hang.get_words_found():
+                        hide_word += f" {hide} "
+                    else:
+                        hide_word += " _ "
+                    hiding_word.modifier(hide_word)
+                    hiding_word.display(
+                        screen, len(hide_word), ((WIDTH // 2) - (WIDTH // 2) // 2, 20)
+                    )
+        if hang.get_penality() == 1:
+            stick.bottom_bar()
+        elif hang.get_penality() == 2:
+            stick.vertical_bar()
+        elif hang.get_penality() == 3:
+            stick.top_sidebar()
+        elif hang.get_penality() == 4:
+            stick.diagonal_bar()
+        elif hang.get_penality() == 5:
+            stick.rope()
         pygame.display.flip()
-        clock.tick(30)
+        clock.tick(500)
 
 
-async def main():
-    hang = hanged_c.Hanged([], [], "", "", "ok", 0)
-
-    await asyncio.gather(hanged_game(hang), show_screen(hang))
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+show_screen()
